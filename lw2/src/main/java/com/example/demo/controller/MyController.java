@@ -44,7 +44,7 @@ public class MyController {
         } catch (ValidationFailedException e) {
             response.setCode("failed");
             response.setErrorCode("ValidationException");
-            response.setErrorMessage("Ошибка валидации");
+            response.setErrorMessage(e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             response.setCode("failed");
