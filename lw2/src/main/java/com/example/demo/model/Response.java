@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,20 +22,11 @@ public class Response {
     private String systemTime;
 
     @NotBlank(message = "code не может быть пустым")
-//    @Pattern(regexp = "success|failed", message = "code должно быть 'success' или 'failed'")
     private String code;
 
     @NotBlank(message = "errorCode не может быть пустым")
-//    @Pattern(
-//            regexp = "UnsupportedCodeException|ValidationException|UnknownException",
-//            message = "errorCode должно быть одним из: UnsupportedCodeException, ValidationException, UnknownException"
-//    )
     private String errorCode;
 
     @NotBlank(message = "errorMessage не может быть пустым")
-//    @Pattern(
-//            regexp = "Не поддерживаемая ошибка|Ошибка валидации|Произошла непредвиденная ошибка",
-//            message = "errorMessage должно быть одним из: Не поддерживаемая ошибка, Ошибка валидации, Произошла непредвиденная ошибка"
-//    )
     private String errorMessage;
 }
