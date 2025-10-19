@@ -37,7 +37,8 @@ public class MyController {
     @PostMapping(value = "/feedback")
     public ResponseEntity<Response> feedback(@Valid @RequestBody Request request, BindingResult bindingResult) {
 
-        log.info("request: {}", request);
+        log.info("Запрос - /feedback");
+        log.info("Исходный request: {}", request);
 
         Response response = Response.builder()
                 .uid(request.getUid())
@@ -48,31 +49,48 @@ public class MyController {
                 .errorMessage(ErrorMessages.EMPTY)
                 .build();
 
+        log.info("Инициализирован базовый response: {}", response);
+
         try {
+            log.info("Начало валидации запроса...");
             validationService.isValid(bindingResult);
+            log.info("Валидация успешно пройдена.");
 
             if ("123".equals(request.getUid())) {
+                log.warn("Обнаружен неподдерживаемый UID: {}", request.getUid());
                 throw new UnsupportedCodeException("UID '123' не поддерживается");
             }
 
         } catch (ValidationFailedException e) {
+            log.error("Ошибка валидации: {}", e.getMessage());
             response.setCode(Codes.FAILED);
             response.setErrorCode(ErrorCodes.VALIDATION_EXCEPTION);
             response.setErrorMessage(ErrorMessages.VALIDATION);
+            log.info("Response после обработки ValidationFailedException: {}", response);
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
         } catch (UnsupportedCodeException e) {
+            log.error("Ошибка UnsupportedCodeException: {}", e.getMessage());
             response.setCode(Codes.FAILED);
             response.setErrorCode(ErrorCodes.UNSUPPORTED_EXCEPTION);
             response.setErrorMessage(ErrorMessages.UNSUPPORTED);
+            log.info("Response после обработки UnsupportedCodeException: {}", response);
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
         } catch (Exception e) {
+            log.error("Неизвестная ошибка: {}", e.getMessage(), e);
             response.setCode(Codes.FAILED);
             response.setErrorCode(ErrorCodes.UNSUPPORTED_EXCEPTION);
             response.setErrorMessage(ErrorMessages.UNKNOWN);
+            log.info("Response после обработки неизвестной ошибки: {}", response);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        modifyResponseService.modify(response);
 
-        return new ResponseEntity<>(modifyResponseService.modify(response), HttpStatus.OK);
+        log.info("Модификация ответа перед отправкой...");
+        Response modifiedResponse = modifyResponseService.modify(response);
+        log.info("Response после modifyResponseService.modify(): {}", modifiedResponse);
+
+        log.info("=== Отправка успешного ответа клиенту ===");
+        return new ResponseEntity<>(modifiedResponse, HttpStatus.OK);
     }
 }
