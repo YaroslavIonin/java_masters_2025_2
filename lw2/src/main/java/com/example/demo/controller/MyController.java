@@ -19,6 +19,8 @@ import com.example.demo.service.ValidationService;
 import com.example.demo.exception.ValidationFailedException;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -53,6 +55,15 @@ public class MyController {
 
         try {
             log.info("Начало валидации запроса...");
+
+            if (bindingResult.hasErrors()) {
+                List<String> errors = bindingResult.getFieldErrors().stream()
+                        .map(error -> String.format("Поле '%s': %s", error.getField(), error.getDefaultMessage()))
+                        .collect(Collectors.toList());
+
+                log.error("Ошибки валидации запроса: {}", errors);
+            }
+
             validationService.isValid(bindingResult);
             log.info("Валидация успешно пройдена.");
 
@@ -62,7 +73,7 @@ public class MyController {
             }
 
         } catch (ValidationFailedException e) {
-            log.error("Ошибка валидации: {}", e.getMessage());
+            log.error("Ошибка ValidationFailedException при обработке запроса {}: {}", request, e.getMessage());
             response.setCode(Codes.FAILED);
             response.setErrorCode(ErrorCodes.VALIDATION_EXCEPTION);
             response.setErrorMessage(ErrorMessages.VALIDATION);
@@ -70,7 +81,7 @@ public class MyController {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
         } catch (UnsupportedCodeException e) {
-            log.error("Ошибка UnsupportedCodeException: {}", e.getMessage());
+            log.error("Ошибка UnsupportedCodeException при обработке запроса {}: {}", request, e.getMessage());
             response.setCode(Codes.FAILED);
             response.setErrorCode(ErrorCodes.UNSUPPORTED_EXCEPTION);
             response.setErrorMessage(ErrorMessages.UNSUPPORTED);
@@ -78,7 +89,7 @@ public class MyController {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
         } catch (Exception e) {
-            log.error("Неизвестная ошибка: {}", e.getMessage(), e);
+            log.error("Неизвестная ошибка при обработке запроса {}: {}", request, e.getMessage(), e);
             response.setCode(Codes.FAILED);
             response.setErrorCode(ErrorCodes.UNSUPPORTED_EXCEPTION);
             response.setErrorMessage(ErrorMessages.UNKNOWN);
