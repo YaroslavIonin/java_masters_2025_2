@@ -22,11 +22,11 @@ public class Response {
     private String systemTime;
 
     @NotBlank(message = "code не может быть пустым")
-    private String code;
+    private Codes code;
 
     @NotBlank(message = "errorCode не может быть пустым")
-    private String errorCode;
+    private ErrorCodes errorCode;
 
     @NotBlank(message = "errorMessage не может быть пустым")
-    private String errorMessage;
+    private ErrorMessages errorMessage;
 }
