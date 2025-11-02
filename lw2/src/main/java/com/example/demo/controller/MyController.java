@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.exception.UnsupportedCodeException;
 import com.example.demo.model.*;
 import com.example.demo.service.ModifyResponseService;
+import com.example.demo.service.ModifySystemNameRequestService;
 import com.example.demo.utils.DateTimeUtil;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +29,15 @@ public class MyController {
 
     private final ValidationService validationService;
     private final ModifyResponseService modifyResponseService;
+    private final ModifySystemNameRequestService modifyRequestService;
 
     @Autowired
     public MyController(ValidationService validationService,
-                        @Qualifier("ModifySystemTimeResponseService") ModifyResponseService modifyResponseService) {
+                        @Qualifier("ModifySystemTimeResponseService") ModifyResponseService modifyResponseService,
+                        ModifySystemNameRequestService modifyRequestService) {
         this.validationService = validationService;
         this.modifyResponseService = modifyResponseService;
+        this.modifyRequestService = modifyRequestService;
     }
 
     @PostMapping(value = "/feedback")
@@ -99,6 +103,7 @@ public class MyController {
 
         log.info("Модификация ответа перед отправкой...");
         Response modifiedResponse = modifyResponseService.modify(response);
+        modifyRequestService.modify(request);
         log.info("Response после modifyResponseService.modify(): {}", modifiedResponse);
 
         log.info("=== Отправка успешного ответа клиенту ===");
