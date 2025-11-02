@@ -39,8 +39,20 @@ public class MyController {
     @PostMapping(value = "/feedback")
     public ResponseEntity<Response> feedback(@Valid @RequestBody Request request, BindingResult bindingResult) {
 
+        long currentReceiveTime = System.currentTimeMillis();
         log.info("Запрос - /feedback");
         log.info("Исходный request: {}", request);
+
+        if (request.getReceiveTime() != null) {
+            long timeDifference = currentReceiveTime - request.getReceiveTime();
+
+            log.info("Время получения Service 1: {}", request.getReceiveTime());
+            log.info("Время получения Service 2: {}", currentReceiveTime);
+            log.info("Разница: {} мс", timeDifference);
+
+        } else {
+            log.warn("Поле receiveTime не установлено");
+        }
 
         Response response = Response.builder()
                 .uid(request.getUid())

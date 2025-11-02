@@ -45,6 +45,7 @@ public class MyController {
 
         log.info("Запрос - /feedback");
         log.info("Исходный request: {}", request);
+        request.setReceiveTime(System.currentTimeMillis());
 
         Response response = Response.builder()
                 .uid(request.getUid())
