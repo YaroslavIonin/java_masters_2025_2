@@ -13,6 +13,7 @@ public class ModifySystemNameRequestService implements ModifyRequestService {
     @Override
     public void modify(Request request) {
         request.setSystemName(MySystems.valueOf("ERP"));
+        request.setSource("mobile");
 
         HttpEntity<Request> httpEntity = new HttpEntity<>(request);
         new RestTemplate().exchange(
