@@ -23,7 +23,7 @@ public class Request {
     @Size(max = 32, message = "operationUid не может превышать 32 символа")
     private String operationUid;
 
-    private String systemName;
+    private MySystems systemName;
     private String systemTime;
     private String source;
 
