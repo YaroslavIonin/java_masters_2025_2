@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.exception.UnsupportedCodeException;
 import com.example.demo.model.*;
+import com.example.demo.service.AnnualBonusService;
 import com.example.demo.service.ModifyResponseService;
 import com.example.demo.service.ModifySystemNameRequestService;
 import com.example.demo.utils.DateTimeUtil;
@@ -30,14 +31,19 @@ public class MyController {
     private final ValidationService validationService;
     private final ModifyResponseService modifyResponseService;
     private final ModifySystemNameRequestService modifyRequestService;
+    private final AnnualBonusService annualBonusService;
 
     @Autowired
-    public MyController(ValidationService validationService,
-                        @Qualifier("ModifySystemTimeResponseService") ModifyResponseService modifyResponseService,
-                        ModifySystemNameRequestService modifyRequestService) {
+    public MyController(
+            ValidationService validationService,
+            @Qualifier("ModifySystemTimeResponseService") ModifyResponseService modifyResponseService,
+            ModifySystemNameRequestService modifyRequestService,
+            AnnualBonusService annualBonusService
+    ) {
         this.validationService = validationService;
         this.modifyResponseService = modifyResponseService;
         this.modifyRequestService = modifyRequestService;
+        this.annualBonusService = annualBonusService;
     }
 
     @PostMapping(value = "/feedback")
@@ -75,6 +81,32 @@ public class MyController {
             if ("123".equals(request.getUid())) {
                 log.warn("Обнаружен неподдерживаемый UID: {}", request.getUid());
                 throw new UnsupportedCodeException("UID '123' не поддерживается");
+            }
+
+            if (request.getPosition() != null && request.getSalary() != null &&
+                    request.getBonus() != null && request.getWorkDays() != null) {
+
+                log.info("Расчет годового бонуса для позиции: {}, зарплата: {}, бонус: {}, рабочие дни: {}",
+                        request.getPosition(), request.getSalary(), request.getBonus(), request.getWorkDays());
+
+                double annualBonus = annualBonusService.calculate(
+                        request.getPosition(),
+                        request.getSalary(),
+                        request.getBonus(),
+                        request.getWorkDays()
+                );
+
+                log.info("Рассчитанный годовой бонус: {}", annualBonus);
+
+                response.setAnnualBonus(annualBonus);
+                response.setPosition(request.getPosition());
+                response.setSalary(request.getSalary());
+                response.setBonus(request.getBonus());
+                response.setWorkDays(request.getWorkDays());
+
+                log.info("Response обогащен данными о годовом бонусе: {}", response);
+            } else {
+                log.info("Недостаточно данных для расчета годового бонуса");
             }
 
         } catch (ValidationFailedException e) {
