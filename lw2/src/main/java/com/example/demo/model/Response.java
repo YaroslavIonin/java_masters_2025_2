@@ -29,4 +29,10 @@ public class Response {
 
     @NotBlank(message = "errorMessage не может быть пустым")
     private ErrorMessages errorMessage;
+
+    private Double annualBonus;
+    private Positions position;
+    private Double salary;
+    private Double bonus;
+    private Integer workDays;
 }
