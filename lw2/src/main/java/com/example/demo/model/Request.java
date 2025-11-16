@@ -27,6 +27,11 @@ public class Request {
     private String systemTime;
     private String source;
 
+    private Positions position;
+    private Double salary;
+    private Double bonus;
+    private Integer workDays;
+
     @Min(value = 1, message = "communicationId должен быть >= 1")
     @Max(value = 100000, message = "communicationId должен быть <= 100000")
     private int communicationId;
