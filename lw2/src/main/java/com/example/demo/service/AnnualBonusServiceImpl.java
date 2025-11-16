@@ -17,4 +17,18 @@ public class AnnualBonusServiceImpl implements AnnualBonusService {
     private int getDaysInYear() {
         return Year.now().length();
     }
+
+    public double calculateQuarterlyBonus(Positions positions, double salary, double bonus) {
+        if (!positions.isManager()) {
+            throw new IllegalArgumentException(
+                    "Квартальная премия доступна только для менеджерских позиций. " +
+                            "Текущая позиция: " + positions.name() + " (" + positions.getDescription() + ")"
+            );
+        }
+
+        double quarterCoefficient = 1;
+        double quarterlyBonus = salary * bonus * positions.getPositionCoefficient() * quarterCoefficient;
+        return quarterlyBonus;
+    }
+
 }
