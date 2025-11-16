@@ -18,7 +18,7 @@ class AnnualBonusServiceImplTest {
         double result = new AnnualBonusServiceImpl().calculate(position, salary, bonus, workDays);
 
         // then
-        double expected = 360493.8271604938;
+        double expected = 226356.16438356164;
         assertThat(result).isEqualTo(expected);
     }
 }

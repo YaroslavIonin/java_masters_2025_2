@@ -11,7 +11,7 @@ public class AnnualBonusServiceImpl implements AnnualBonusService {
     @Override
     public double calculate(Positions positions, double salary, double bonus, int workDays) {
         int daysInYear = getDaysInYear();
-        return salary * bonus * daysInYear * positions.getPositionCoefficient() / workDays;
+        return salary * bonus * positions.getPositionCoefficient() * workDays / daysInYear;
     }
 
     private int getDaysInYear() {
