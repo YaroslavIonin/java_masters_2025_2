@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Group</title>
+</head>
+<body>
+
+<h2>Add / Edit Study Group</h2>
+
+<form th:action="@{/saveGroup}" th:object="${group}" method="post">
+
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Group Name:</label>
+    <input type="text" th:field="*{groupName}"/><br><br>
+
+    <label>Faculty:</label>
+    <input type="text" th:field="*{faculty}"/><br><br>
+
+    <label>Course:</label>
+    <input type="number" th:field="*{course}"/><br><br>
+
+    <button type="submit">Save</button>
+
+</form>
+
+</body>
+</html>

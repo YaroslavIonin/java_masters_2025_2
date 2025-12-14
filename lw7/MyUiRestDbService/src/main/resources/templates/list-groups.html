@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Study Groups</title>
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+          crossorigin="anonymous"/>
+</head>
+<body>
+
+<h2>Study Groups</h2>
+
+<a th:href="@{/addGroupForm}">Add Group</a>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Group Name</th>
+        <th>Faculty</th>
+        <th>Course</th>
+        <th>Actions</th>
+    </tr>
+
+    <tr th:each="group : ${groups}">
+        <td th:text="${group.id}"></td>
+        <td th:text="${group.groupName}"></td>
+        <td th:text="${group.faculty}"></td>
+        <td th:text="${group.course}"></td>
+        <td>
+            <a th:href="@{/showGroupUpdateForm(groupId=${group.id})}">Edit</a>
+            |
+            <a th:href="@{/deleteGroup(groupId=${group.id})}">Delete</a>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
