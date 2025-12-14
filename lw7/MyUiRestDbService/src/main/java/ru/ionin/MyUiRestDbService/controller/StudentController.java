@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.ionin.MyUiRestDbService.dao.StudentRepository;
+import ru.ionin.MyUiRestDbService.dao.StudyGroupRepository;
 import ru.ionin.MyUiRestDbService.entity.Student;
 
 import java.util.Optional;
@@ -15,10 +16,12 @@ import java.util.Optional;
 public class StudentController {
 
     private final StudentRepository studentRepository;
+    private final StudyGroupRepository studyGroupRepository;
 
     @Autowired
-    public StudentController(StudentRepository studentRepository) {
+    public StudentController(StudentRepository studentRepository, StudyGroupRepository studyGroupRepository) {
         this.studentRepository = studentRepository;
+        this.studyGroupRepository = studyGroupRepository;
     }
 
     @GetMapping("/list")
@@ -31,8 +34,8 @@ public class StudentController {
     @GetMapping("/addStudentForm")
     public ModelAndView addStudentForm() {
         ModelAndView mav = new ModelAndView("add-student-form");
-        Student student = new Student();
-        mav.addObject("student", student);
+        mav.addObject("student", new Student());
+        mav.addObject("groups", studyGroupRepository.findAll());
         return mav;
     }
 
@@ -45,12 +48,13 @@ public class StudentController {
     @GetMapping("/showUpdateForm")
     public ModelAndView showUpdateForm(@RequestParam Long studentId) {
         ModelAndView mav = new ModelAndView("add-student-form");
-        Optional<Student> optionalStudent = studentRepository.findById(studentId);
-        Student student = new Student();
-        if(optionalStudent.isPresent()){
-            student = optionalStudent.get();
-        }
+
+        Student student = studentRepository.findById(studentId)
+                .orElse(new Student());
+
         mav.addObject("student", student);
+        mav.addObject("groups", studyGroupRepository.findAll());
+
         return mav;
     }
 

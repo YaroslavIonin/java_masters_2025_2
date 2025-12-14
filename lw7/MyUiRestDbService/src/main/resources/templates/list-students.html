@@ -29,6 +29,7 @@
             <th>Surname</th>
             <th>Faculty</th>
             <th>Age</th>
+            <th>Group</th>
         </tr>
         </thead>
         <tbody>
@@ -37,6 +38,7 @@
             <td th:text="${student.name}"/>
             <td th:text="${student.faculty}"/>
             <td th:text="${student.age}"/>
+            <td th:text="${student.studyGroup != null ? student.studyGroup.groupName : ''}"></td>
             <td>
                 <a th:href="@{/showUpdateForm(studentId=${student.id})}" class="btn btn-info">Update</a>
 

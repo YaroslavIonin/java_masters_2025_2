@@ -27,4 +27,8 @@ public class Student {
 
     @Column(name = "age")
     private Integer age;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private StudyGroup studyGroup;
 }

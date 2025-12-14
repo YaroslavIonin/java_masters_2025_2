@@ -25,6 +25,11 @@
 
         <input type="text" th:field="*{age}" class="form-control col-4 mb-4" placeholder="Enter Age"/>
 
+        <select th:field="*{studyGroup.id}" class="form-control col-4 mb-4">
+            <option value="" disabled selected>Select Study Group</option>
+            <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.groupName}"></option>
+        </select>
+
         <button type="submit" class="btn btn-primary col-2">Save</button>
 
         <input type="hidden" th:field="*{id}"/>
